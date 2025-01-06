@@ -10,7 +10,6 @@ import { toggleFavorite } from "../redux/favoritesSlice"; // Redux action
 
 export default function RecipeDetailScreen(props) {
   const recipe = props.route.params; // recipe passed from previous screen
-
   const dispatch = useDispatch();
   const favoriterecipes = useSelector(
     (state) => state.favorites.favoriterecipes
@@ -33,9 +32,9 @@ export default function RecipeDetailScreen(props) {
     >
       {/* recipe Image */}
       <View style={styles.imageContainer} testID="imageContainer">
-     
+        <Image source={{uri: recipe.recipe.recipeImage}} style={styles.recipeImage}/>     
       </View>
-
+      <View></View>
       {/* Back Button and Favorite Button */}
       <View style={styles.topButtonsContainer}>
         <TouchableOpacity
@@ -66,24 +65,52 @@ export default function RecipeDetailScreen(props) {
             testID="recipeDetailsContainer"
           >
             <Text style={styles.recipeTitle} testID="recipeTitle">
-         
-              
+              {recipe?.recipe?.recipeName}
               </Text>
             <Text style={styles.recipeCategory} testID="recipeCategory">
+              {recipe?.recipe?.category}
               </Text>
           </View>
           <View style={styles.miscContainer} testID="miscContainer">
-        
+          <View style={[styles.miscItem, {marginRight: 8}]}>
+          <Text style={styles.miscIcon}>🕒</Text>
+          <Text style={styles.miscText}>35 Mins</Text>
+        </View>
+        <View style={[styles.miscItem, {marginRight: 8}]}>
+          <Text style={styles.miscIcon}>👥</Text>
+          <Text style={styles.miscText}>03 Servings</Text>
+        </View>
+        <View style={[styles.miscItem, {marginRight: 8}]}>
+          <Text style={styles.miscIcon}>🔥</Text>
+          <Text style={styles.miscText}>103 Cal</Text>
+        </View>
+        <View style={styles.miscItem}>
+          <Text style={styles.miscIcon}>🎚️</Text>
+          <Text style={styles.miscText}>Medium</Text>
+        </View>
       </View>
 
       {/* Ingredients */}
+      <Text style={styles.sectionTitle}>Ingredients</Text>
       <View style={styles.sectionContainer}>
-     
+      <View style={styles.ingredientsList} testID="ingredientsList">
+        
+          {(recipe?.recipe?.ingredients).map((i) => (
+            <View key={i.ingredientName} style={styles.ingredientItem}>
+              <View style={styles.ingredientBullet} />
+              <Text style={styles.ingredientText}>
+                {/* {meal["strMeasure" + i]} {meal["strIngredient" + i]} */}
+                {i.ingredientName} {i.measure}
+              </Text>
+            </View>
+          ))}
+        </View>
       </View>
 
       {/* Instructions */}
+      <Text style={styles.sectionTitle}>Instructions</Text>
       <View style={styles.sectionContainer} testID="sectionContainer">
-        
+        <Text>{recipe?.recipe?.recipeInstructions}</Text>
         </View>
           {/* Description */}
          
@@ -227,9 +254,10 @@ const styles = StyleSheet.create({
   },
   miscContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     marginBottom: 20,
     paddingHorizontal: wp(4),
+    alignItems: 'center'
   },
   miscItem: {
     alignItems: "center",
@@ -238,6 +266,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 10,
     elevation: 3,
+    flex: 1,
+    //flexWrap: 'wrap'
   },
   miscIcon: {
     fontSize: hp(3.5),

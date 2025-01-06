@@ -1,30 +1,63 @@
-import { View, Text, Pressable, Image, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Image,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp,} from "react-native-responsive-screen";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Recipe({ categories, foods }) {
   const navigation = useNavigation();
 
   const renderItem = ({ item, index }) => (
-<ArticleCard item={item} index={index} navigation={navigation} />
+    <ArticleCard item={item} index={index} navigation={navigation} />
   );
 
   return (
     <View style={styles.container}>
       <View testID="recipesDisplay">
-            
+        <FlatList
+          data={foods}
+          renderItem={renderItem}
+          numColumns={2}
+          keyExtractor={(item) => item?.recipeId}
+        />
       </View>
     </View>
   );
 }
 
 const ArticleCard = ({ item, index, navigation }) => {
+  console.log(item, "item");
   return (
     <View
-      style={[styles.cardContainer, { paddingLeft: 20, paddingRight: 15}]} testID="articleDisplay"
+      style={[
+        styles.cardContainer,
+        {
+          paddingLeft: 20,
+          paddingRight: 15,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+      ]}
+      testID="articleDisplay"
     >
-   
+      <TouchableOpacity onPress={() => navigation.navigate("RecipeDetail", {recipe: item})}>
+        <Image
+          source={{ uri: item?.recipeImage }}
+          style={{ width: 150, height: 100, borderRadius: 10}}
+        />
+        <Text>{item?.recipeName}</Text>
+        <Text>{item?.cookingDescription}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -50,7 +83,7 @@ const styles = StyleSheet.create({
   },
   articleImage: {
     width: "100%",
-   
+
     borderRadius: 35,
     backgroundColor: "rgba(0, 0, 0, 0.05)", // bg-black/5
   },
